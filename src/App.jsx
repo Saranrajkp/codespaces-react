@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-//import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import { HashRouter as Router, Route, Routes, Link } from 'react-router-dom';
 
 import FileList from './components/FileList';
 import FileUpload from './components/FileUpload';
@@ -69,30 +68,25 @@ function App() {
             <Link to="/login">Login</Link>
           )}
         </header>
+        <nav>
+          <ul>
+            <li>
+              <Link to="/">Home</Link>
+            </li>
+            <li>
+              <Link to="/files">Files</Link>
+            </li>
+            <li>
+              <Link to="/upload">Upload</Link>
+            </li>
+          </ul>
+        </nav>
         <main>
-        <Router>
-  <div>
-    <nav>
-      <ul>
-        <li>
-          <Link to="/">Home</Link>
-        </li>
-        <li>
-          <Link to="/files">Files</Link>
-        </li>
-        <li>
-          <Link to="/upload">Upload</Link>
-        </li>
-      </ul>
-    </nav>
-
-    <Routes>
-      <Route path="/" element={<FileList />} />
-      <Route path="/files" element={<FileList />} />
-      <Route path="/upload" element={<FileUpload />} />
-    </Routes>
-  </div>
-</Router>
+          <Routes>
+            <Route path="/" element={<FileList />} />
+            <Route path="/files" element={<FileList />} />
+            <Route path="/upload" element={<FileUpload />} />
+          </Routes>
         </main>
       </div>
     </Router>

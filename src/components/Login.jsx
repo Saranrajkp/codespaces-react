@@ -1,19 +1,15 @@
 import React, { useState } from 'react';
-//import { useHistory } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
-import { FileUpload } from './FileUpload';
+// Remove the import of FileUpload if it's not needed in this component
+// import FileUpload from './FileUpload';
 
 function Login({ onLogin }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const history = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Mock login logic
     if (username && password) {
-      onLogin({ id: '123', name: username });
-      history.push('/');
+      onLogin({ username, password });
     }
   };
 
@@ -39,5 +35,4 @@ function Login({ onLogin }) {
   );
 }
 
-export default FileList;
-export { FileUpload, Login };
+export default Login;

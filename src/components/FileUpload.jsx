@@ -27,4 +27,5 @@ function FileUpload({ onUpload }) {
     </div>
   );
 }
+
 export default FileUpload;
