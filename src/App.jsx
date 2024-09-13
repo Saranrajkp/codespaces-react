@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Route, Routes, Link, Navigate } from 'react-router-dom';
+import { Route, Routes, Link, Navigate } from 'react-router-dom';
 import FileList from './components/FileList';
 import FileUpload from './components/FileUpload';
-import FileDownload from './components/FileDownload';
 import Login from './components/Login';
 import { getUserFiles, uploadFile, downloadFile } from './api/fileApi';
 
