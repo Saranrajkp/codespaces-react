@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { HashRouter as Router, Route, Routes, Link } from 'react-router-dom';
-
+import { BrowserRouter, Route, Routes, Link, Navigate } from 'react-router-dom';
 import FileList from './components/FileList';
 import FileUpload from './components/FileUpload';
 import FileDownload from './components/FileDownload';
@@ -10,6 +9,13 @@ import { getUserFiles, uploadFile, downloadFile } from './api/fileApi';
 function App() {
   const [user, setUser] = useState(null);
   const [files, setFiles] = useState([]);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
 
   useEffect(() => {
     if (user) {
@@ -28,11 +34,13 @@ function App() {
 
   const handleLogin = (userData) => {
     setUser(userData);
+    localStorage.setItem('user', JSON.stringify(userData));
   };
 
   const handleLogout = () => {
     setUser(null);
     setFiles([]);
+    localStorage.removeItem('user');
   };
 
   const handleFileUpload = async (file) => {
@@ -54,8 +62,12 @@ function App() {
     }
   };
 
+  function ProtectedRoute({ children }) {
+    return user ? children : <Navigate to="/login" />;
+  }
+
   return (
-    <Router>
+    <BrowserRouter>
       <div className="app">
         <header>
           <h1>Dropbox Clone</h1>
@@ -70,26 +82,21 @@ function App() {
         </header>
         <nav>
           <ul>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <Link to="/files">Files</Link>
-            </li>
-            <li>
-              <Link to="/upload">Upload</Link>
-            </li>
+            <li><Link to="/">Home</Link></li>
+            <li><Link to="/files">Files</Link></li>
+            <li><Link to="/upload">Upload</Link></li>
           </ul>
         </nav>
         <main>
           <Routes>
-            <Route path="/" element={<FileList />} />
-            <Route path="/files" element={<FileList />} />
-            <Route path="/upload" element={<FileUpload />} />
+            <Route path="/login" element={<Login onLogin={handleLogin} />} />
+            <Route path="/" element={<ProtectedRoute><FileList files={files} onDownload={handleFileDownload} /></ProtectedRoute>} />
+            <Route path="/files" element={<ProtectedRoute><FileList files={files} onDownload={handleFileDownload} /></ProtectedRoute>} />
+            <Route path="/upload" element={<ProtectedRoute><FileUpload onUpload={handleFileUpload} /></ProtectedRoute>} />
           </Routes>
         </main>
       </div>
-    </Router>
+    </BrowserRouter>
   );
 }
 
