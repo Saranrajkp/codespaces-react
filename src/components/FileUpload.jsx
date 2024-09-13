@@ -37,13 +37,16 @@ function FileUpload({ onUpload }) {
 
   return (
     <div className="file-upload">
-      <h2>Upload File</h2>
+      <h2 className="section-title">Upload File</h2>
       <form onSubmit={handleSubmit} onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}>
-        <div className={`drag-drop-area ${dragActive ? 'active' : ''}`}>
+        <div className={`drag-drop-area ${dragActive ? 'active' : ''} ${file ? 'file-selected' : ''}`}>
           <input type="file" onChange={handleFileChange} />
-          <p>Drag and drop your file here, or click to select a file</p>
+          {file ? (
+            <p className="selected-file">Selected file: {file.name}</p>
+          ) : (
+            <p>Drag and drop your file here, or click to select a file</p>
+          )}
         </div>
-        {file && <p className="selected-file">Selected file: {file.name}</p>}
         <button type="submit" className="btn btn-upload" disabled={!file}>
           Upload
         </button>

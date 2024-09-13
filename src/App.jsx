@@ -67,36 +67,34 @@ function App() {
   }
 
   return (
-    <BrowserRouter>
-      <div className="app">
-        <header>
-          <h1>Dropbox Clone</h1>
-          {user ? (
-            <>
-              <span>Welcome, {user.name}</span>
-              <button onClick={handleLogout}>Logout</button>
-            </>
-          ) : (
-            <Link to="/login">Login</Link>
-          )}
-        </header>
-        <nav>
+    <div className="app">
+      <header className="app-header">
+        <h1 className="app-title">Dropbox Clone</h1>
+        <nav className="app-nav">
           <ul>
             <li><Link to="/">Home</Link></li>
             <li><Link to="/files">Files</Link></li>
             <li><Link to="/upload">Upload</Link></li>
           </ul>
         </nav>
-        <main>
-          <Routes>
-            <Route path="/login" element={<Login onLogin={handleLogin} />} />
-            <Route path="/" element={<ProtectedRoute><FileList files={files} onDownload={handleFileDownload} /></ProtectedRoute>} />
-            <Route path="/files" element={<ProtectedRoute><FileList files={files} onDownload={handleFileDownload} /></ProtectedRoute>} />
-            <Route path="/upload" element={<ProtectedRoute><FileUpload onUpload={handleFileUpload} /></ProtectedRoute>} />
-          </Routes>
-        </main>
-      </div>
-    </BrowserRouter>
+        {user ? (
+          <div className="user-info">
+            <span>Welcome, {user.name}</span>
+            <button className="btn btn-logout" onClick={handleLogout}>Logout</button>
+          </div>
+        ) : (
+          <Link to="/login" className="btn btn-login">Login</Link>
+        )}
+      </header>
+      <main className="app-main">
+        <Routes>
+          <Route path="/login" element={<Login onLogin={handleLogin} />} />
+          <Route path="/" element={<ProtectedRoute><FileList files={files} onDownload={handleFileDownload} /></ProtectedRoute>} />
+          <Route path="/files" element={<ProtectedRoute><FileList files={files} onDownload={handleFileDownload} /></ProtectedRoute>} />
+          <Route path="/upload" element={<ProtectedRoute><FileUpload onUpload={handleFileUpload} /></ProtectedRoute>} />
+        </Routes>
+      </main>
+    </div>
   );
 }
 
