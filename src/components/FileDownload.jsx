@@ -6,9 +6,9 @@ function FileDownload({ fileId, fileName, onDownload }) {
   };
 
   return (
-    <div className="file-download">
-      <button onClick={handleDownload}>Download {fileName}</button>
-    </div>
+    <button className="btn btn-download" onClick={handleDownload}>
+      Download
+    </button>
   );
 }
 
