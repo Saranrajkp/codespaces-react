@@ -1,50 +1,24 @@
-// api/fileApi.js
+const API_BASE_URL = '/api'; // This will work with the Vite proxy
 
-// Mock user files
-const mockFiles = {
-    '123': [
-      { id: '1', name: 'document.pdf', size: 1024000 },
-      { id: '2', name: 'image.jpg', size: 2048000 },
-      { id: '3', name: 'spreadsheet.xlsx', size: 512000 },
-    ],
-  };
-  
-  export const getUserFiles = (userId) => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        const userFiles = mockFiles[userId];
-        if (userFiles) {
-          resolve(userFiles);
-        } else {
-          reject(new Error('User not found'));
-        }
-      }, 500);
-    });
-  };
-  
-  export const uploadFile = (userId, file) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const newFile = {
-          id: Date.now().toString(),
-          name: file.name,
-          size: file.size,
-        };
-        mockFiles[userId].push(newFile);
-        resolve(newFile);
-      }, 1000);
-    });
-  };
-  
-  export const downloadFile = (userId, fileId) => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        const file = mockFiles[userId].find((f) => f.id === fileId);
-        if (file) {
-          resolve(file);
-        } else {
-          reject(new Error('File not found'));
-        }
-      }, 1000);
-    });
-  };
+export const getUserFiles = async (userId) => {
+  const response = await fetch(`${API_BASE_URL}/users/${userId}/files`);
+  if (!response.ok) throw new Error('Failed to fetch user files');
+  return response.json();
+};
+
+export const uploadFile = async (userId, file) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  const response = await fetch(`${API_BASE_URL}/users/${userId}/files`, {
+    method: 'POST',
+    body: formData,
+  });
+  if (!response.ok) throw new Error('Failed to upload file');
+  return response.json();
+};
+
+export const downloadFile = async (userId, fileId) => {
+  const response = await fetch(`${API_BASE_URL}/users/${userId}/files/${fileId}`);
+  if (!response.ok) throw new Error('Failed to download file');
+  return response.blob();
+};
