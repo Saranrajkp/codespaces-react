@@ -24,7 +24,7 @@ function App() {
 
   const fetchUserFiles = async () => {
     try {
-      const userFiles = await getUserFiles(user.id);
+      const userFiles = await getUserFiles(user.username);
       setFiles(userFiles);
     } catch (error) {
       console.error('Error fetching user files:', error);
@@ -44,7 +44,7 @@ function App() {
 
   const handleFileUpload = async (file) => {
     try {
-      await uploadFile(user.id, file);
+      await uploadFile(user.username, file);
       fetchUserFiles();
     } catch (error) {
       console.error('Error uploading file:', error);
@@ -53,7 +53,7 @@ function App() {
 
   const handleFileDownload = async (fileId) => {
     try {
-      const fileData = await downloadFile(user.id, fileId);
+      const fileData = await downloadFile(user.username, fileId);
       // Implement file download logic here
       console.log('File downloaded:', fileData);
     } catch (error) {
@@ -61,36 +61,44 @@ function App() {
     }
   };
 
-  function ProtectedRoute({ children }) {
-    return user ? children : <Navigate to="/login" />;
-  }
-
   return (
     <div className="app">
       <header className="app-header">
-        <h1 className="app-title">Dropbox Clone</h1>
-        <nav className="app-nav">
-          <ul>
-            <li><Link to="/">Home</Link></li>
-            <li><Link to="/files">Files</Link></li>
-            <li><Link to="/upload">Upload</Link></li>
-          </ul>
-        </nav>
-        {user ? (
-          <div className="user-info">
-            <span>Welcome, {user.name}</span>
-            <button className="btn btn-logout" onClick={handleLogout}>Logout</button>
-          </div>
-        ) : (
-          <Link to="/login" className="btn btn-login">Login</Link>
-        )}
+        <div className="header-left">
+          <h1 className="app-title">Dropbox Clone</h1>
+          {user && (
+            <nav className="app-nav">
+              <ul>
+                <li><Link to="/">Home</Link></li>
+                <li><Link to="/files">Files</Link></li>
+                <li><Link to="/upload">Upload</Link></li>
+              </ul>
+            </nav>
+          )}
+        </div>
+        <div className="header-right">
+          {user ? (
+            <div className="user-info">
+              <span className="welcome-message">Welcome, {user.username}</span>
+              <button className="btn btn-logout" onClick={handleLogout}>Logout</button>
+            </div>
+          ) : (
+            <Link to="/login" className="btn btn-login">Login</Link>
+          )}
+        </div>
       </header>
       <main className="app-main">
         <Routes>
-          <Route path="/login" element={<Login onLogin={handleLogin} />} />
-          <Route path="/" element={<ProtectedRoute><FileList files={files} onDownload={handleFileDownload} /></ProtectedRoute>} />
-          <Route path="/files" element={<ProtectedRoute><FileList files={files} onDownload={handleFileDownload} /></ProtectedRoute>} />
-          <Route path="/upload" element={<ProtectedRoute><FileUpload onUpload={handleFileUpload} /></ProtectedRoute>} />
+          <Route path="/login" element={<Login onLogin={handleLogin} user={user} />} />
+          {user ? (
+            <>
+              <Route path="/" element={<FileList files={files} onDownload={handleFileDownload} />} />
+              <Route path="/files" element={<FileList files={files} onDownload={handleFileDownload} />} />
+              <Route path="/upload" element={<FileUpload onUpload={handleFileUpload} />} />
+            </>
+          ) : (
+            <Route path="*" element={<Navigate to="/login" replace />} />
+          )}
         </Routes>
       </main>
     </div>

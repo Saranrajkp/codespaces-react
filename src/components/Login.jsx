@@ -1,10 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 // Remove the import of FileUpload if it's not needed in this component
 // import FileUpload from './FileUpload';
 
-function Login({ onLogin }) {
+function Login({ onLogin, user }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+
+  useEffect(() => {
+    if (!user) {
+      setUsername('');
+      setPassword('');
+    }
+  }, [user]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
